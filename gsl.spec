@@ -4,7 +4,7 @@
 #
 Name     : gsl
 Version  : 2.4
-Release  : 3
+Release  : 4
 URL      : http://ftpmirror.gnu.org/gsl/gsl-2.4.tar.gz
 Source0  : http://ftpmirror.gnu.org/gsl/gsl-2.4.tar.gz
 Summary  : GNU Scientific Library
