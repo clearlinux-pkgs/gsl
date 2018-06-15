@@ -5,16 +5,17 @@
 # Source0 file verified with key 0x245FB74BAE05B3E9 (alken@colorado.edu)
 #
 Name     : gsl
-Version  : 2.4
-Release  : 6
-URL      : http://ftpmirror.gnu.org/gsl/gsl-2.4.tar.gz
-Source0  : http://ftpmirror.gnu.org/gsl/gsl-2.4.tar.gz
-Source99 : http://ftpmirror.gnu.org/gsl/gsl-2.4.tar.gz.sig
+Version  : 2.5
+Release  : 7
+URL      : http://ftpmirror.gnu.org/gsl/gsl-2.5.tar.gz
+Source0  : http://ftpmirror.gnu.org/gsl/gsl-2.5.tar.gz
+Source99 : http://ftpmirror.gnu.org/gsl/gsl-2.5.tar.gz.sig
 Summary  : GNU Scientific Library
 Group    : Development/Tools
 License  : GPL-3.0
 Requires: gsl-bin
 Requires: gsl-lib
+Requires: gsl-license
 Requires: gsl-man
 BuildRequires : sed
 
@@ -27,6 +28,7 @@ routines for scientific computing.
 %package bin
 Summary: bin components for the gsl package.
 Group: Binaries
+Requires: gsl-license
 Requires: gsl-man
 
 %description bin
@@ -56,9 +58,18 @@ doc components for the gsl package.
 %package lib
 Summary: lib components for the gsl package.
 Group: Libraries
+Requires: gsl-license
 
 %description lib
 lib components for the gsl package.
+
+
+%package license
+Summary: license components for the gsl package.
+Group: Default
+
+%description license
+license components for the gsl package.
 
 
 %package man
@@ -70,9 +81,9 @@ man components for the gsl package.
 
 
 %prep
-%setup -q -n gsl-2.4
+%setup -q -n gsl-2.5
 pushd ..
-cp -a gsl-2.4 buildavx2
+cp -a gsl-2.5 buildavx2
 popd
 
 %build
@@ -80,7 +91,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1527839159
+export SOURCE_DATE_EPOCH=1529072928
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -100,8 +111,11 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
 
 %install
-export SOURCE_DATE_EPOCH=1527839159
+export SOURCE_DATE_EPOCH=1529072928
 rm -rf %{buildroot}
+mkdir -p %{buildroot}/usr/share/doc/gsl
+cp COPYING %{buildroot}/usr/share/doc/gsl/COPYING
+cp doc/_static/gpl.txt %{buildroot}/usr/share/doc/gsl/doc__static_gpl.txt
 pushd ../buildavx2/
 %make_install
 popd
@@ -163,6 +177,7 @@ popd
 /usr/include/gsl/gsl_fft_halfcomplex_float.h
 /usr/include/gsl/gsl_fft_real.h
 /usr/include/gsl/gsl_fft_real_float.h
+/usr/include/gsl/gsl_filter.h
 /usr/include/gsl/gsl_fit.h
 /usr/include/gsl/gsl_heapsort.h
 /usr/include/gsl/gsl_histogram.h
@@ -198,6 +213,7 @@ popd
 /usr/include/gsl/gsl_monte_miser.h
 /usr/include/gsl/gsl_monte_plain.h
 /usr/include/gsl/gsl_monte_vegas.h
+/usr/include/gsl/gsl_movstat.h
 /usr/include/gsl/gsl_multifit.h
 /usr/include/gsl/gsl_multifit_nlin.h
 /usr/include/gsl/gsl_multifit_nlinear.h
@@ -292,6 +308,7 @@ popd
 /usr/include/gsl/gsl_sf_pow_int.h
 /usr/include/gsl/gsl_sf_psi.h
 /usr/include/gsl/gsl_sf_result.h
+/usr/include/gsl/gsl_sf_sincos_pi.h
 /usr/include/gsl/gsl_sf_synchrotron.h
 /usr/include/gsl/gsl_sf_transport.h
 /usr/include/gsl/gsl_sf_trig.h
@@ -370,19 +387,24 @@ popd
 /usr/share/aclocal/*.m4
 
 %files doc
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
+%doc /usr/share/doc/gsl/*
 %doc /usr/share/info/*
 
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/haswell/libgsl.so.23
-/usr/lib64/haswell/libgsl.so.23.0.0
+/usr/lib64/haswell/libgsl.so.23.1.0
 /usr/lib64/haswell/libgslcblas.so.0
 /usr/lib64/haswell/libgslcblas.so.0.0.0
 /usr/lib64/libgsl.so.23
-/usr/lib64/libgsl.so.23.0.0
+/usr/lib64/libgsl.so.23.1.0
 /usr/lib64/libgslcblas.so.0
 /usr/lib64/libgslcblas.so.0.0.0
+
+%files license
+%defattr(-,root,root,-)
+/usr/share/doc/gsl/COPYING
 
 %files man
 %defattr(-,root,root,-)
