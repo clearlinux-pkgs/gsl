@@ -6,17 +6,17 @@
 #
 Name     : gsl
 Version  : 2.5
-Release  : 7
-URL      : http://ftpmirror.gnu.org/gsl/gsl-2.5.tar.gz
-Source0  : http://ftpmirror.gnu.org/gsl/gsl-2.5.tar.gz
-Source99 : http://ftpmirror.gnu.org/gsl/gsl-2.5.tar.gz.sig
+Release  : 8
+URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz
+Source99 : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz.sig
 Summary  : GNU Scientific Library
 Group    : Development/Tools
 License  : GPL-3.0
-Requires: gsl-bin
-Requires: gsl-lib
-Requires: gsl-license
-Requires: gsl-man
+Requires: gsl-bin = %{version}-%{release}
+Requires: gsl-lib = %{version}-%{release}
+Requires: gsl-license = %{version}-%{release}
+Requires: gsl-man = %{version}-%{release}
 BuildRequires : sed
 
 %description
@@ -28,8 +28,8 @@ routines for scientific computing.
 %package bin
 Summary: bin components for the gsl package.
 Group: Binaries
-Requires: gsl-license
-Requires: gsl-man
+Requires: gsl-license = %{version}-%{release}
+Requires: gsl-man = %{version}-%{release}
 
 %description bin
 bin components for the gsl package.
@@ -38,9 +38,9 @@ bin components for the gsl package.
 %package dev
 Summary: dev components for the gsl package.
 Group: Development
-Requires: gsl-lib
-Requires: gsl-bin
-Provides: gsl-devel
+Requires: gsl-lib = %{version}-%{release}
+Requires: gsl-bin = %{version}-%{release}
+Provides: gsl-devel = %{version}-%{release}
 
 %description dev
 dev components for the gsl package.
@@ -49,7 +49,7 @@ dev components for the gsl package.
 %package doc
 Summary: doc components for the gsl package.
 Group: Documentation
-Requires: gsl-man
+Requires: gsl-man = %{version}-%{release}
 
 %description doc
 doc components for the gsl package.
@@ -58,7 +58,7 @@ doc components for the gsl package.
 %package lib
 Summary: lib components for the gsl package.
 Group: Libraries
-Requires: gsl-license
+Requires: gsl-license = %{version}-%{release}
 
 %description lib
 lib components for the gsl package.
@@ -91,7 +91,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C
-export SOURCE_DATE_EPOCH=1529072928
+export SOURCE_DATE_EPOCH=1542161988
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -100,7 +100,7 @@ pushd ../buildavx2/
 export CFLAGS="$CFLAGS -m64 -march=haswell"
 export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
 export LDFLAGS="$LDFLAGS -m64 -march=haswell"
-%configure --disable-static    --libdir=/usr/lib64/haswell
+%configure --disable-static
 make  %{?_smp_mflags}
 popd
 %check
@@ -109,15 +109,17 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 make VERBOSE=1 V=1 %{?_smp_mflags} check
+cd ../buildavx2;
+make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1529072928
+export SOURCE_DATE_EPOCH=1542161988
 rm -rf %{buildroot}
-mkdir -p %{buildroot}/usr/share/doc/gsl
-cp COPYING %{buildroot}/usr/share/doc/gsl/COPYING
-cp doc/_static/gpl.txt %{buildroot}/usr/share/doc/gsl/doc__static_gpl.txt
+mkdir -p %{buildroot}/usr/share/package-licenses/gsl
+cp COPYING %{buildroot}/usr/share/package-licenses/gsl/COPYING
+cp doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/doc__static_gpl.txt
 pushd ../buildavx2/
-%make_install
+%make_install_avx2
 popd
 %make_install
 
@@ -129,6 +131,8 @@ popd
 /usr/bin/gsl-config
 /usr/bin/gsl-histogram
 /usr/bin/gsl-randist
+/usr/bin/haswell/gsl-histogram
+/usr/bin/haswell/gsl-randist
 
 %files dev
 %defattr(-,root,root,-)
@@ -385,10 +389,10 @@ popd
 /usr/lib64/libgslcblas.so
 /usr/lib64/pkgconfig/gsl.pc
 /usr/share/aclocal/*.m4
+/usr/share/man/man3/gsl.3
 
 %files doc
 %defattr(0644,root,root,0755)
-%doc /usr/share/doc/gsl/*
 %doc /usr/share/info/*
 
 %files lib
@@ -403,12 +407,12 @@ popd
 /usr/lib64/libgslcblas.so.0.0.0
 
 %files license
-%defattr(-,root,root,-)
-/usr/share/doc/gsl/COPYING
+%defattr(0644,root,root,0755)
+/usr/share/package-licenses/gsl/COPYING
+/usr/share/package-licenses/gsl/doc__static_gpl.txt
 
 %files man
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 /usr/share/man/man1/gsl-config.1
 /usr/share/man/man1/gsl-histogram.1
 /usr/share/man/man1/gsl-randist.1
-/usr/share/man/man3/gsl.3
