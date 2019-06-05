@@ -6,7 +6,7 @@
 #
 Name     : gsl
 Version  : 2.5
-Release  : 8
+Release  : 9
 URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz
 Source99 : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz.sig
