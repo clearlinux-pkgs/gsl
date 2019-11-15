@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x245FB74BAE05B3E9 (alken@colorado.edu)
 #
 Name     : gsl
-Version  : 2.5
-Release  : 10
-URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz
-Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz
-Source1 : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz.sig
+Version  : 2.6
+Release  : 11
+URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.6.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.6.tar.gz
+Source1 : https://mirrors.kernel.org/gnu/gsl/gsl-2.6.tar.gz.sig
 Summary  : GNU Scientific Library
 Group    : Development/Tools
 License  : GPL-3.0
@@ -81,10 +81,10 @@ man components for the gsl package.
 
 
 %prep
-%setup -q -n gsl-2.5
-cd %{_builddir}/gsl-2.5
+%setup -q -n gsl-2.6
+cd %{_builddir}/gsl-2.6
 pushd ..
-cp -a gsl-2.5 buildavx2
+cp -a gsl-2.6 buildavx2
 popd
 
 %build
@@ -92,7 +92,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1573789737
+export SOURCE_DATE_EPOCH=1573796919
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -122,11 +122,11 @@ cd ../buildavx2;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1573789737
+export SOURCE_DATE_EPOCH=1573796919
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gsl
-cp %{_builddir}/gsl-2.5/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
-cp %{_builddir}/gsl-2.5/doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+cp %{_builddir}/gsl-2.6/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+cp %{_builddir}/gsl-2.6/doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
 pushd ../buildavx2/
 %make_install_avx2
 popd
@@ -163,6 +163,10 @@ popd
 /usr/include/gsl/gsl_block_ulong.h
 /usr/include/gsl/gsl_block_ushort.h
 /usr/include/gsl/gsl_bspline.h
+/usr/include/gsl/gsl_bst.h
+/usr/include/gsl/gsl_bst_avl.h
+/usr/include/gsl/gsl_bst_rb.h
+/usr/include/gsl/gsl_bst_types.h
 /usr/include/gsl/gsl_cblas.h
 /usr/include/gsl/gsl_cdf.h
 /usr/include/gsl/gsl_chebyshev.h
@@ -357,6 +361,20 @@ popd
 /usr/include/gsl/gsl_spline.h
 /usr/include/gsl/gsl_spline2d.h
 /usr/include/gsl/gsl_spmatrix.h
+/usr/include/gsl/gsl_spmatrix_char.h
+/usr/include/gsl/gsl_spmatrix_complex_double.h
+/usr/include/gsl/gsl_spmatrix_complex_float.h
+/usr/include/gsl/gsl_spmatrix_complex_long_double.h
+/usr/include/gsl/gsl_spmatrix_double.h
+/usr/include/gsl/gsl_spmatrix_float.h
+/usr/include/gsl/gsl_spmatrix_int.h
+/usr/include/gsl/gsl_spmatrix_long.h
+/usr/include/gsl/gsl_spmatrix_long_double.h
+/usr/include/gsl/gsl_spmatrix_short.h
+/usr/include/gsl/gsl_spmatrix_uchar.h
+/usr/include/gsl/gsl_spmatrix_uint.h
+/usr/include/gsl/gsl_spmatrix_ulong.h
+/usr/include/gsl/gsl_spmatrix_ushort.h
 /usr/include/gsl/gsl_statistics.h
 /usr/include/gsl/gsl_statistics_char.h
 /usr/include/gsl/gsl_statistics_double.h
@@ -406,12 +424,12 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/haswell/libgsl.so.23
-/usr/lib64/haswell/libgsl.so.23.1.0
+/usr/lib64/haswell/libgsl.so.25
+/usr/lib64/haswell/libgsl.so.25.0.0
 /usr/lib64/haswell/libgslcblas.so.0
 /usr/lib64/haswell/libgslcblas.so.0.0.0
-/usr/lib64/libgsl.so.23
-/usr/lib64/libgsl.so.23.1.0
+/usr/lib64/libgsl.so.25
+/usr/lib64/libgsl.so.25.0.0
 /usr/lib64/libgslcblas.so.0
 /usr/lib64/libgslcblas.so.0.0.0
 
