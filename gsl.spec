@@ -6,14 +6,15 @@
 #
 Name     : gsl
 Version  : 2.5
-Release  : 9
+Release  : 10
 URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz
-Source99 : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz.sig
+Source1 : https://mirrors.kernel.org/gnu/gsl/gsl-2.5.tar.gz.sig
 Summary  : GNU Scientific Library
 Group    : Development/Tools
 License  : GPL-3.0
 Requires: gsl-bin = %{version}-%{release}
+Requires: gsl-info = %{version}-%{release}
 Requires: gsl-lib = %{version}-%{release}
 Requires: gsl-license = %{version}-%{release}
 Requires: gsl-man = %{version}-%{release}
@@ -29,7 +30,6 @@ routines for scientific computing.
 Summary: bin components for the gsl package.
 Group: Binaries
 Requires: gsl-license = %{version}-%{release}
-Requires: gsl-man = %{version}-%{release}
 
 %description bin
 bin components for the gsl package.
@@ -41,18 +41,18 @@ Group: Development
 Requires: gsl-lib = %{version}-%{release}
 Requires: gsl-bin = %{version}-%{release}
 Provides: gsl-devel = %{version}-%{release}
+Requires: gsl = %{version}-%{release}
 
 %description dev
 dev components for the gsl package.
 
 
-%package doc
-Summary: doc components for the gsl package.
-Group: Documentation
-Requires: gsl-man = %{version}-%{release}
+%package info
+Summary: info components for the gsl package.
+Group: Default
 
-%description doc
-doc components for the gsl package.
+%description info
+info components for the gsl package.
 
 
 %package lib
@@ -82,6 +82,7 @@ man components for the gsl package.
 
 %prep
 %setup -q -n gsl-2.5
+cd %{_builddir}/gsl-2.5
 pushd ..
 cp -a gsl-2.5 buildavx2
 popd
@@ -90,8 +91,16 @@ popd
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-export LANG=C
-export SOURCE_DATE_EPOCH=1542161988
+export LANG=C.UTF-8
+export SOURCE_DATE_EPOCH=1573789737
+export GCC_IGNORE_WERROR=1
+export AR=gcc-ar
+export RANLIB=gcc-ranlib
+export NM=gcc-nm
+export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FCFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export FFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -104,7 +113,7 @@ export LDFLAGS="$LDFLAGS -m64 -march=haswell"
 make  %{?_smp_mflags}
 popd
 %check
-export LANG=C
+export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
@@ -113,11 +122,11 @@ cd ../buildavx2;
 make VERBOSE=1 V=1 %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1542161988
+export SOURCE_DATE_EPOCH=1573789737
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gsl
-cp COPYING %{buildroot}/usr/share/package-licenses/gsl/COPYING
-cp doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/doc__static_gpl.txt
+cp %{_builddir}/gsl-2.5/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+cp %{_builddir}/gsl-2.5/doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
 pushd ../buildavx2/
 %make_install_avx2
 popd
@@ -391,9 +400,9 @@ popd
 /usr/share/aclocal/*.m4
 /usr/share/man/man3/gsl.3
 
-%files doc
+%files info
 %defattr(0644,root,root,0755)
-%doc /usr/share/info/*
+/usr/share/info/gsl-ref.info
 
 %files lib
 %defattr(-,root,root,-)
@@ -408,8 +417,7 @@ popd
 
 %files license
 %defattr(0644,root,root,0755)
-/usr/share/package-licenses/gsl/COPYING
-/usr/share/package-licenses/gsl/doc__static_gpl.txt
+/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
 
 %files man
 %defattr(0644,root,root,0755)
