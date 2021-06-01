@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x245FB74BAE05B3E9 (alken@colorado.edu)
 #
 Name     : gsl
-Version  : 2.6
-Release  : 12
-URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.6.tar.gz
-Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.6.tar.gz
-Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.6.tar.gz.sig
+Version  : 2.7
+Release  : 13
+URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
+Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz.sig
 Summary  : GNU Scientific Library
 Group    : Development/Tools
 License  : GPL-3.0
@@ -81,10 +81,10 @@ man components for the gsl package.
 
 
 %prep
-%setup -q -n gsl-2.6
-cd %{_builddir}/gsl-2.6
+%setup -q -n gsl-2.7
+cd %{_builddir}/gsl-2.7
 pushd ..
-cp -a gsl-2.6 buildavx2
+cp -a gsl-2.7 buildavx2
 popd
 
 %build
@@ -92,7 +92,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1605142226
+export SOURCE_DATE_EPOCH=1622587950
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -124,11 +124,11 @@ cd ../buildavx2;
 make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1605142226
+export SOURCE_DATE_EPOCH=1622587950
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gsl
-cp %{_builddir}/gsl-2.6/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
-cp %{_builddir}/gsl-2.6/doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+cp %{_builddir}/gsl-2.7/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+cp %{_builddir}/gsl-2.7/doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
 pushd ../buildavx2/
 %make_install_avx2
 popd
@@ -412,6 +412,7 @@ popd
 /usr/include/gsl/gsl_version.h
 /usr/include/gsl/gsl_wavelet.h
 /usr/include/gsl/gsl_wavelet2d.h
+/usr/include/gsl/test_source.c
 /usr/lib64/haswell/libgsl.so
 /usr/lib64/haswell/libgslcblas.so
 /usr/lib64/libgsl.so
@@ -427,11 +428,11 @@ popd
 %files lib
 %defattr(-,root,root,-)
 /usr/lib64/haswell/libgsl.so.25
-/usr/lib64/haswell/libgsl.so.25.0.0
+/usr/lib64/haswell/libgsl.so.25.1.0
 /usr/lib64/haswell/libgslcblas.so.0
 /usr/lib64/haswell/libgslcblas.so.0.0.0
 /usr/lib64/libgsl.so.25
-/usr/lib64/libgsl.so.25.0.0
+/usr/lib64/libgsl.so.25.1.0
 /usr/lib64/libgslcblas.so.0
 /usr/lib64/libgslcblas.so.0.0.0
 
