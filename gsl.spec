@@ -6,7 +6,7 @@
 #
 Name     : gsl
 Version  : 2.7
-Release  : 13
+Release  : 14
 URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
 Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz.sig
@@ -86,13 +86,16 @@ cd %{_builddir}/gsl-2.7
 pushd ..
 cp -a gsl-2.7 buildavx2
 popd
+pushd ..
+cp -a gsl-2.7 buildavx512
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1622587950
+export SOURCE_DATE_EPOCH=1622765843
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -114,6 +117,16 @@ export LDFLAGS="$LDFLAGS -m64 -march=haswell"
 %configure --disable-static
 make  %{?_smp_mflags}
 popd
+unset PKG_CONFIG_PATH
+pushd ../buildavx512/
+export CFLAGS="$CFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
+export CXXFLAGS="$CXXFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
+export FFLAGS="$FFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
+export FCFLAGS="$FCFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
+export LDFLAGS="$LDFLAGS -m64 -march=skylake-avx512"
+%configure --disable-static
+make  %{?_smp_mflags}
+popd
 %check
 export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
@@ -122,13 +135,18 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check
 cd ../buildavx2;
 make %{?_smp_mflags} check || :
+cd ../buildavx512;
+make %{?_smp_mflags} check || :
 
 %install
-export SOURCE_DATE_EPOCH=1622587950
+export SOURCE_DATE_EPOCH=1622765843
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gsl
 cp %{_builddir}/gsl-2.7/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
 cp %{_builddir}/gsl-2.7/doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+pushd ../buildavx512/
+%make_install_avx512
+popd
 pushd ../buildavx2/
 %make_install_avx2
 popd
@@ -142,6 +160,8 @@ popd
 /usr/bin/gsl-config
 /usr/bin/gsl-histogram
 /usr/bin/gsl-randist
+/usr/bin/haswell/avx512_1/gsl-histogram
+/usr/bin/haswell/avx512_1/gsl-randist
 /usr/bin/haswell/gsl-histogram
 /usr/bin/haswell/gsl-randist
 
@@ -413,6 +433,8 @@ popd
 /usr/include/gsl/gsl_wavelet.h
 /usr/include/gsl/gsl_wavelet2d.h
 /usr/include/gsl/test_source.c
+/usr/lib64/haswell/avx512_1/libgsl.so
+/usr/lib64/haswell/avx512_1/libgslcblas.so
 /usr/lib64/haswell/libgsl.so
 /usr/lib64/haswell/libgslcblas.so
 /usr/lib64/libgsl.so
@@ -427,6 +449,10 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
+/usr/lib64/haswell/avx512_1/libgsl.so.25
+/usr/lib64/haswell/avx512_1/libgsl.so.25.1.0
+/usr/lib64/haswell/avx512_1/libgslcblas.so.0
+/usr/lib64/haswell/avx512_1/libgslcblas.so.0.0.0
 /usr/lib64/haswell/libgsl.so.25
 /usr/lib64/haswell/libgsl.so.25.1.0
 /usr/lib64/haswell/libgslcblas.so.0
