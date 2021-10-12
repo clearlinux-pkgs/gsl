@@ -6,7 +6,7 @@
 #
 Name     : gsl
 Version  : 2.7
-Release  : 15
+Release  : 16
 URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
 Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz.sig
@@ -14,6 +14,7 @@ Summary  : GNU Scientific Library
 Group    : Development/Tools
 License  : GPL-3.0
 Requires: gsl-bin = %{version}-%{release}
+Requires: gsl-filemap = %{version}-%{release}
 Requires: gsl-info = %{version}-%{release}
 Requires: gsl-lib = %{version}-%{release}
 Requires: gsl-license = %{version}-%{release}
@@ -30,6 +31,7 @@ routines for scientific computing.
 Summary: bin components for the gsl package.
 Group: Binaries
 Requires: gsl-license = %{version}-%{release}
+Requires: gsl-filemap = %{version}-%{release}
 
 %description bin
 bin components for the gsl package.
@@ -47,6 +49,14 @@ Requires: gsl = %{version}-%{release}
 dev components for the gsl package.
 
 
+%package filemap
+Summary: filemap components for the gsl package.
+Group: Default
+
+%description filemap
+filemap components for the gsl package.
+
+
 %package info
 Summary: info components for the gsl package.
 Group: Default
@@ -59,6 +69,7 @@ info components for the gsl package.
 Summary: lib components for the gsl package.
 Group: Libraries
 Requires: gsl-license = %{version}-%{release}
+Requires: gsl-filemap = %{version}-%{release}
 
 %description lib
 lib components for the gsl package.
@@ -95,35 +106,35 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1622765843
+export SOURCE_DATE_EPOCH=1634053407
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FCFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export FFLAGS="$FFLAGS -O3 -ffat-lto-objects -flto=4 "
-export CXXFLAGS="$CXXFLAGS -O3 -ffat-lto-objects -flto=4 "
+export CFLAGS="$CFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export FCFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export FFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
+export CXXFLAGS="$CXXFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mno-vzeroupper -mprefer-vector-width=256 "
 %configure --disable-static
 make  %{?_smp_mflags}
 
 unset PKG_CONFIG_PATH
 pushd ../buildavx2/
-export CFLAGS="$CFLAGS -m64 -march=haswell"
-export CXXFLAGS="$CXXFLAGS -m64 -march=haswell"
-export FFLAGS="$FFLAGS -m64 -march=haswell"
-export FCFLAGS="$FCFLAGS -m64 -march=haswell"
-export LDFLAGS="$LDFLAGS -m64 -march=haswell"
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v3"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v3"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v3"
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v3"
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
 %configure --disable-static
 make  %{?_smp_mflags}
 popd
 unset PKG_CONFIG_PATH
 pushd ../buildavx512/
-export CFLAGS="$CFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
-export CXXFLAGS="$CXXFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
-export FFLAGS="$FFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
-export FCFLAGS="$FCFLAGS -m64 -march=skylake-avx512 -mprefer-vector-width=512"
-export LDFLAGS="$LDFLAGS -m64 -march=skylake-avx512"
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256"
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256"
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v4"
 %configure --disable-static
 make  %{?_smp_mflags}
 popd
@@ -132,23 +143,25 @@ export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
-make %{?_smp_mflags} check
+make %{?_smp_mflags} check || :
 cd ../buildavx2;
-make %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || : || :
 cd ../buildavx512;
-make %{?_smp_mflags} check || :
+make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1622765843
+export SOURCE_DATE_EPOCH=1634053407
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gsl
 cp %{_builddir}/gsl-2.7/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
 cp %{_builddir}/gsl-2.7/doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
-pushd ../buildavx512/
-%make_install_avx512
-popd
 pushd ../buildavx2/
-%make_install_avx2
+%make_install_v3
+/usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+popd
+pushd ../buildavx512/
+%make_install_v4
+/usr/bin/elf-move.py avx512 %{buildroot}-v4 %{buildroot}/usr/share/clear/optimized-elf/ %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 popd
 %make_install
 
@@ -160,10 +173,7 @@ popd
 /usr/bin/gsl-config
 /usr/bin/gsl-histogram
 /usr/bin/gsl-randist
-/usr/bin/haswell/avx512_1/gsl-histogram
-/usr/bin/haswell/avx512_1/gsl-randist
-/usr/bin/haswell/gsl-histogram
-/usr/bin/haswell/gsl-randist
+/usr/share/clear/optimized-elf/bin*
 
 %files dev
 %defattr(-,root,root,-)
@@ -433,15 +443,15 @@ popd
 /usr/include/gsl/gsl_wavelet.h
 /usr/include/gsl/gsl_wavelet2d.h
 /usr/include/gsl/test_source.c
-/usr/lib64/haswell/avx512_1/libgsl.so
-/usr/lib64/haswell/avx512_1/libgslcblas.so
-/usr/lib64/haswell/libgsl.so
-/usr/lib64/haswell/libgslcblas.so
 /usr/lib64/libgsl.so
 /usr/lib64/libgslcblas.so
 /usr/lib64/pkgconfig/gsl.pc
 /usr/share/aclocal/*.m4
 /usr/share/man/man3/gsl.3
+
+%files filemap
+%defattr(-,root,root,-)
+/usr/share/clear/filemap/filemap-gsl
 
 %files info
 %defattr(0644,root,root,0755)
@@ -449,18 +459,11 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/haswell/avx512_1/libgsl.so.25
-/usr/lib64/haswell/avx512_1/libgsl.so.25.1.0
-/usr/lib64/haswell/avx512_1/libgslcblas.so.0
-/usr/lib64/haswell/avx512_1/libgslcblas.so.0.0.0
-/usr/lib64/haswell/libgsl.so.25
-/usr/lib64/haswell/libgsl.so.25.1.0
-/usr/lib64/haswell/libgslcblas.so.0
-/usr/lib64/haswell/libgslcblas.so.0.0.0
 /usr/lib64/libgsl.so.25
 /usr/lib64/libgsl.so.25.1.0
 /usr/lib64/libgslcblas.so.0
 /usr/lib64/libgslcblas.so.0.0.0
+/usr/share/clear/optimized-elf/lib*
 
 %files license
 %defattr(0644,root,root,0755)

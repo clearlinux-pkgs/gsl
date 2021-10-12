@@ -1,9 +1,15 @@
 Configure miss: GNU-style extern inline
 Configure miss: GNU-style extern inline
 Configure miss: GNU-style extern inline
+Configure miss: IEEE comparisons
+Configure miss: IEEE comparisons
+Configure miss: IEEE comparisons
 Configure miss: IEEE compiler flags
 Configure miss: IEEE compiler flags
 Configure miss: IEEE compiler flags
+Configure miss: IEEE denormalized values
+Configure miss: IEEE denormalized values
+Configure miss: IEEE denormalized values
 Configure miss: gcc options needed to detect all undeclared functions
 Configure miss: gcc options needed to detect all undeclared functions
 Configure miss: gcc options needed to detect all undeclared functions
