@@ -6,7 +6,7 @@
 #
 Name     : gsl
 Version  : 2.7
-Release  : 19
+Release  : 20
 URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
 Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz.sig
@@ -106,7 +106,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1656037838
+export SOURCE_DATE_EPOCH=1656119779
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -150,7 +150,7 @@ cd ../buildavx512;
 make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1656037838
+export SOURCE_DATE_EPOCH=1656119779
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gsl
 cp %{_builddir}/gsl-2.7/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
