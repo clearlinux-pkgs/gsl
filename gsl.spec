@@ -6,7 +6,7 @@
 #
 Name     : gsl
 Version  : 2.7
-Release  : 25
+Release  : 26
 URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
 Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz.sig
@@ -97,13 +97,16 @@ cd %{_builddir}/gsl-2.7
 pushd ..
 cp -a gsl-2.7 buildavx2
 popd
+pushd ..
+cp -a gsl-2.7 buildavx512
+popd
 
 %build
 export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1665089629
+export SOURCE_DATE_EPOCH=1665096236
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -125,6 +128,16 @@ export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v3"
 %configure --disable-static
 make  %{?_smp_mflags}
 popd
+unset PKG_CONFIG_PATH
+pushd ../buildavx512/
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256 -Wl,-z,x86-64-v4"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256 -Wl,-z,x86-64-v4"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256"
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256"
+export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v4"
+%configure --disable-static
+make  %{?_smp_mflags}
+popd
 %check
 export LANG=C.UTF-8
 export http_proxy=http://127.0.0.1:9/
@@ -133,9 +146,11 @@ export no_proxy=localhost,127.0.0.1,0.0.0.0
 make %{?_smp_mflags} check || :
 cd ../buildavx2;
 make %{?_smp_mflags} check || : || :
+cd ../buildavx512;
+make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1665089629
+export SOURCE_DATE_EPOCH=1665096236
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gsl
 cp %{_builddir}/gsl-%{version}/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
@@ -143,8 +158,12 @@ cp %{_builddir}/gsl-%{version}/doc/_static/gpl.txt %{buildroot}/usr/share/packag
 pushd ../buildavx2/
 %make_install_v3
 popd
+pushd ../buildavx512/
+%make_install_v4
+popd
 %make_install
 /usr/bin/elf-move.py avx2 %{buildroot}-v3 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
+/usr/bin/elf-move.py avx512 %{buildroot}-v4 %{buildroot} %{buildroot}/usr/share/clear/filemap/filemap-%{name}
 
 %files
 %defattr(-,root,root,-)
@@ -426,6 +445,8 @@ popd
 /usr/include/gsl/test_source.c
 /usr/lib64/glibc-hwcaps/x86-64-v3/libgsl.so
 /usr/lib64/glibc-hwcaps/x86-64-v3/libgslcblas.so
+/usr/lib64/glibc-hwcaps/x86-64-v4/libgsl.so
+/usr/lib64/glibc-hwcaps/x86-64-v4/libgslcblas.so
 /usr/lib64/libgsl.so
 /usr/lib64/libgslcblas.so
 /usr/lib64/pkgconfig/gsl.pc
@@ -446,6 +467,10 @@ popd
 /usr/lib64/glibc-hwcaps/x86-64-v3/libgsl.so.25.1.0
 /usr/lib64/glibc-hwcaps/x86-64-v3/libgslcblas.so.0
 /usr/lib64/glibc-hwcaps/x86-64-v3/libgslcblas.so.0.0.0
+/usr/lib64/glibc-hwcaps/x86-64-v4/libgsl.so.25
+/usr/lib64/glibc-hwcaps/x86-64-v4/libgsl.so.25.1.0
+/usr/lib64/glibc-hwcaps/x86-64-v4/libgslcblas.so.0
+/usr/lib64/glibc-hwcaps/x86-64-v4/libgslcblas.so.0.0.0
 /usr/lib64/libgsl.so.25
 /usr/lib64/libgsl.so.25.1.0
 /usr/lib64/libgslcblas.so.0
