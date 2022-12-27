@@ -5,11 +5,11 @@
 # Source0 file verified with key 0x245FB74BAE05B3E9 (alken@colorado.edu)
 #
 Name     : gsl
-Version  : 2.7
-Release  : 27
-URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
-Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz
-Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.tar.gz.sig
+Version  : 2.7.1
+Release  : 28
+URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.1.tar.gz
+Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.1.tar.gz
+Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.1.tar.gz.sig
 Summary  : GNU Scientific Library
 Group    : Development/Tools
 License  : GPL-3.0
@@ -92,13 +92,13 @@ man components for the gsl package.
 
 
 %prep
-%setup -q -n gsl-2.7
-cd %{_builddir}/gsl-2.7
+%setup -q -n gsl-2.7.1
+cd %{_builddir}/gsl-2.7.1
 pushd ..
-cp -a gsl-2.7 buildavx2
+cp -a gsl-2.7.1 buildavx2
 popd
 pushd ..
-cp -a gsl-2.7 buildavx512
+cp -a gsl-2.7.1 buildavx512
 popd
 
 %build
@@ -106,15 +106,15 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1667423984
+export SOURCE_DATE_EPOCH=1672176367
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
 export NM=gcc-nm
-export CFLAGS="$CFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition "
-export FCFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition "
-export FFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition "
-export CXXFLAGS="$CXXFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition "
+export CFLAGS="$CFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=512 "
+export FCFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=512 "
+export FFLAGS="$FFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=512 "
+export CXXFLAGS="$CXXFLAGS -O3 -Ofast -falign-functions=32 -ffat-lto-objects -flto=auto -fno-semantic-interposition -mprefer-vector-width=512 "
 %configure --disable-static
 make  %{?_smp_mflags}
 
@@ -130,10 +130,10 @@ make  %{?_smp_mflags}
 popd
 unset PKG_CONFIG_PATH
 pushd ../buildavx512/
-export CFLAGS="$CFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=512 -Wl,-z,x86-64-v4 -mtune=sapphirerapids "
-export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=512 -Wl,-z,x86-64-v4 -mtune=sapphirerapids "
-export FFLAGS="$FFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=512"
-export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=512"
+export CFLAGS="$CFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256 -Wl,-z,x86-64-v4"
+export CXXFLAGS="$CXXFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256 -Wl,-z,x86-64-v4"
+export FFLAGS="$FFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256"
+export FCFLAGS="$FCFLAGS -m64 -march=x86-64-v4 -mprefer-vector-width=256"
 export LDFLAGS="$LDFLAGS -m64 -march=x86-64-v4"
 %configure --disable-static
 make  %{?_smp_mflags}
@@ -150,11 +150,11 @@ cd ../buildavx512;
 make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1667423984
+export SOURCE_DATE_EPOCH=1672176367
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gsl
-cp %{_builddir}/gsl-%{version}/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02 || :
-cp %{_builddir}/gsl-%{version}/doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02 || :
+cp %{_builddir}/gsl-%{version}/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
+cp %{_builddir}/gsl-%{version}/doc/_static/gpl.txt %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02
 pushd ../buildavx2/
 %make_install_v3
 popd
@@ -463,16 +463,16 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
-/usr/lib64/glibc-hwcaps/x86-64-v3/libgsl.so.25
-/usr/lib64/glibc-hwcaps/x86-64-v3/libgsl.so.25.1.0
+/usr/lib64/glibc-hwcaps/x86-64-v3/libgsl.so.27
+/usr/lib64/glibc-hwcaps/x86-64-v3/libgsl.so.27.0.0
 /usr/lib64/glibc-hwcaps/x86-64-v3/libgslcblas.so.0
 /usr/lib64/glibc-hwcaps/x86-64-v3/libgslcblas.so.0.0.0
-/usr/lib64/glibc-hwcaps/x86-64-v4/libgsl.so.25
-/usr/lib64/glibc-hwcaps/x86-64-v4/libgsl.so.25.1.0
+/usr/lib64/glibc-hwcaps/x86-64-v4/libgsl.so.27
+/usr/lib64/glibc-hwcaps/x86-64-v4/libgsl.so.27.0.0
 /usr/lib64/glibc-hwcaps/x86-64-v4/libgslcblas.so.0
 /usr/lib64/glibc-hwcaps/x86-64-v4/libgslcblas.so.0.0.0
-/usr/lib64/libgsl.so.25
-/usr/lib64/libgsl.so.25.1.0
+/usr/lib64/libgsl.so.27
+/usr/lib64/libgsl.so.27.0.0
 /usr/lib64/libgslcblas.so.0
 /usr/lib64/libgslcblas.so.0.0.0
 
