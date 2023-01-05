@@ -6,7 +6,7 @@
 #
 Name     : gsl
 Version  : 2.7.1
-Release  : 29
+Release  : 30
 URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.1.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.1.tar.gz
 Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.1.tar.gz.sig
