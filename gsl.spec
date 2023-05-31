@@ -7,7 +7,7 @@
 #
 Name     : gsl
 Version  : 2.7.1
-Release  : 31
+Release  : 32
 URL      : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.1.tar.gz
 Source0  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.1.tar.gz
 Source1  : https://mirrors.kernel.org/gnu/gsl/gsl-2.7.1.tar.gz.sig
@@ -100,7 +100,7 @@ export http_proxy=http://127.0.0.1:9/
 export https_proxy=http://127.0.0.1:9/
 export no_proxy=localhost,127.0.0.1,0.0.0.0
 export LANG=C.UTF-8
-export SOURCE_DATE_EPOCH=1683227846
+export SOURCE_DATE_EPOCH=1685545561
 export GCC_IGNORE_WERROR=1
 export AR=gcc-ar
 export RANLIB=gcc-ranlib
@@ -144,7 +144,7 @@ cd ../buildavx512;
 make %{?_smp_mflags} check || : || :
 
 %install
-export SOURCE_DATE_EPOCH=1683227846
+export SOURCE_DATE_EPOCH=1685545561
 rm -rf %{buildroot}
 mkdir -p %{buildroot}/usr/share/package-licenses/gsl
 cp %{_builddir}/gsl-%{version}/COPYING %{buildroot}/usr/share/package-licenses/gsl/8624bcdae55baeef00cd11d5dfcfa60f68710a02 || :
@@ -174,10 +174,6 @@ popd
 
 %files dev
 %defattr(-,root,root,-)
-/V3/usr/lib64/libgsl.so
-/V3/usr/lib64/libgslcblas.so
-/V4/usr/lib64/libgsl.so
-/V4/usr/lib64/libgslcblas.so
 /usr/include/gsl/gsl_blas.h
 /usr/include/gsl/gsl_blas_types.h
 /usr/include/gsl/gsl_block.h
@@ -456,13 +452,9 @@ popd
 
 %files lib
 %defattr(-,root,root,-)
-/V3/usr/lib64/libgsl.so.27
 /V3/usr/lib64/libgsl.so.27.0.0
-/V3/usr/lib64/libgslcblas.so.0
 /V3/usr/lib64/libgslcblas.so.0.0.0
-/V4/usr/lib64/libgsl.so.27
 /V4/usr/lib64/libgsl.so.27.0.0
-/V4/usr/lib64/libgslcblas.so.0
 /V4/usr/lib64/libgslcblas.so.0.0.0
 /usr/lib64/libgsl.so.27
 /usr/lib64/libgsl.so.27.0.0
